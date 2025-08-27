@@ -15,6 +15,7 @@
 #include "shapes.h"
 #include "object.h"
 #include "texture.h"
+#include"HDRTexture.h"
 #include "fbo.h"
 
 enum ObjectIds {
@@ -66,7 +67,8 @@ public:
 
     int ShadowMap_Width, ShadowMap_Height;
     int ReflectionMap_Width, ReflectionMap_Height;
-
+    //
+    float e;
     //
     bool DepthFlag = false;
     /*
@@ -118,7 +120,9 @@ public:
     Texture* RipplesNormalT;
     Texture* BricksNormalT;
 
-
+    HDRTexture* HDRP_SKYTexture;
+    HDRTexture* HDRP_IrradianceTxt;
+    
     int mode; // Extra mode indicator hooked up to number keys and sent to shader
     
     // Viewport
@@ -146,6 +150,7 @@ public:
     ShaderProgram* ReflectionProgram;
     FBO* Up_Fbo;
     FBO* Lower_Fbo;
+    //
     //
     //Upper reflection map
     //Lower reflection map

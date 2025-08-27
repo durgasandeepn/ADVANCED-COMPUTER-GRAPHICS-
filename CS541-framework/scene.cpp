@@ -34,10 +34,11 @@ using namespace gl;
 #include "shapes.h"
 #include "object.h"
 #include "texture.h"
+#include "HDRTexture.h"
 #include "transform.h"
 const bool fullPolyCount = true; // Use false when emulating the graphics pipeline in software
 
-
+float e = 0;
 const float PI = 3.14159f;
 const float rad = PI/180.0f;    // Convert degrees to radians
 
@@ -195,6 +196,7 @@ void Scene::InitializeScene()
     Lower_Fbo = new FBO(ReflectionMap_Width, ReflectionMap_Height);
     Lower_Fbo->CreateFBO(ReflectionMap_Width, ReflectionMap_Height);
 
+
     //
     //Shadow Pass
     ShadowProgram = new ShaderProgram();
@@ -272,14 +274,15 @@ void Scene::InitializeScene()
     //SkyTexture = new Texture("skys/sky.jpg");
     SkyTexture = new Texture("skys/Ocean.png");
 
-
     FloorNormalT = new Texture("textures/6670-normal.jpg");
     PodiumNormalT = new Texture("textures/Brazilian_rosewood_pxr128_normal.png");
     RipplesNormalT = new Texture("textures/ripples_normalmap.png");
     BricksNormalT = new Texture("textures/Standard_red_pxr128_normal.png");
 
+    HDRP_SKYTexture = new HDRTexture("HDRP_Texture/Newport_Loft_Ref.hdr");
+    HDRP_IrradianceTxt = new HDRTexture("HDRP_Texture/Newport_Loft_Ref.irr.hdr");
 
-
+    
     // @@ To change an object's surface parameters (Kd, Ks, or alpha),
     // modify the following lines.
     central    = new Object(NULL, nullId);
@@ -288,10 +291,12 @@ void Scene::InitializeScene()
     floor = new Object(FloorPolygons, floorId, floorColor, black, RoughSurface, floorTexture, FloorNormalT);//texture
     teapot = new Object(TeapotPolygons, teapotId, brassColor, lowSpecular, PolishedSurface, teapotTexture);//texture
     podium = new Object(BoxPolygons, boxId, glm::vec3(woodColor), lowSpecular, ModerateSmoothSurface, podiumTexture, PodiumNormalT);//texture
-    sky        = new Object(SpherePolygons, skyId, black, black,0, SkyTexture);
+    //sky        = new Object(SpherePolygons, skyId, black, black,0, SkyTexture);
+    sky        = new Object(SpherePolygons, skyId, black, black,0, HDRP_SKYTexture);
     objectRoot->add(sky, Scale(2000.0, 2000.0, 2000.0));
     ground = new Object(GroundPolygons, groundId, grassColor, black, RoughSurface, groundTexture);//texture
-    sea        = new Object(SeaPolygons, seaId, waterColor, lowSpecular, PolishedSurface, SkyTexture, RipplesNormalT);
+    //sea        = new Object(SeaPolygons, seaId, waterColor, lowSpecular, PolishedSurface, SkyTexture, RipplesNormalT);
+    sea        = new Object(SeaPolygons, seaId, waterColor, lowSpecular, PolishedSurface, HDRP_SKYTexture, RipplesNormalT);
     leftFrame  = FramedPicture(Identity, lPicId, BoxPolygons, QuadPolygons, NULL);//No texture
     rightFrame = FramedPicture(Identity, rPicId, BoxPolygons, QuadPolygons,HouseTexture);//texture
     spheres    = SphereOfSpheres(SpherePolygons);
@@ -369,7 +374,10 @@ void Scene::DrawMenu()
             if (ImGui::MenuItem("Do nothing 1", "",		mode==1)) { mode=1; }
             if (ImGui::MenuItem("Do nothing 2", "",		mode==2)) { mode=2; }
             ImGui::EndMenu(); }
-        
+    
+        //ImGui::SliderFloat("e",&e, 0.0f, 10.0f);
+
+
         ImGui::EndMainMenuBar(); }
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -583,6 +591,8 @@ void Scene::DrawScene()
     //Upper Fbo
     room->drawMe = false;
     teapot->drawMe = false;
+    ground->drawMe = false;
+    sea->drawMe = false;
     //
     ReflectionProgram->UseShader();
     programId = ReflectionProgram->programId;
@@ -697,6 +707,12 @@ void Scene::DrawScene()
         glUniform3fv(loc, 1, &(Ambient[0]));
         loc = glGetUniformLocation(programId, "ShadowMatrix");
         glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(ShadowMatrix));
+
+        /*
+        loc = glGetUniformLocation(programId, "e");
+        glUniform1f(loc, -1.0);//lower map
+        */
+
         CHECKERROR
         //
         //
@@ -707,6 +723,8 @@ void Scene::DrawScene()
         Up_Fbo->BindTexture(3, programId, "UpMap");
         CHECKERROR;
         Lower_Fbo->BindTexture(4, programId, "LowerMap");
+        HDRP_IrradianceTxt->BindTexture(5, programId, "IrradianceMap");
+        HDRP_SKYTexture->BindTexture(6, programId, "SkyMapHDR");
         //
         CHECKERROR;
         //
@@ -716,7 +734,7 @@ void Scene::DrawScene()
         loc = glGetUniformLocation(programId, "shadowMap");
         glUniform1i(loc, 2);
         */
-            
+         
         CHECKERROR;
         // Draw all objects (This recursively traverses the object hierarchy.)
         objectRoot->Draw(lightingProgram, Identity);
@@ -725,6 +743,9 @@ void Scene::DrawScene()
         //
         Up_Fbo->UnbindTexture(3);
         Lower_Fbo->UnbindTexture(4);
+        HDRP_IrradianceTxt->UnbindTexture(5);
+        HDRP_SKYTexture->UnbindTexture(6);
+        //
         // Turn off the shader
         lightingProgram->UnuseShader();
         ////////////////////////////////////////////////////////////////////////////////
