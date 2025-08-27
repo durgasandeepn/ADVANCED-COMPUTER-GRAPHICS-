@@ -79,6 +79,22 @@ public:
     glm::vec3 Ambient = glm::vec3(0.2, 0.2, 0.2);//vec3(0.1, 0.1, 0.1);//vec3(0.2, 0.2, 0.2);
 
 
+    //
+    //Texture variables
+    Texture*  teapotTexture;
+    Texture* floorTexture;
+    Texture* podiumTexture;
+    Texture* groundTexture;
+    Texture* roomTexture;
+    Texture* HouseTexture;
+    Texture* SkyTexture;
+
+    Texture* FloorNormalT;
+    Texture* PodiumNormalT;
+    Texture* RipplesNormalT;
+    Texture* BricksNormalT;
+
+
     int mode; // Extra mode indicator hooked up to number keys and sent to shader
     
     // Viewport

@@ -26,16 +26,19 @@ using namespace gl;
 #include "shapes.h"
 #include "transform.h"
 
+#include <iostream>
+
 #include <glu.h>                // For gluErrorString
 #define CHECKERROR {GLenum err = glGetError(); if (err != GL_NO_ERROR) { fprintf(stderr, "OpenGL error (at line object.cpp:%d): %s\n", __LINE__, gluErrorString(err)); exit(-1);} }
 
 
 Object::Object(Shape* _shape, const int _objectId,
-               const glm::vec3 _diffuseColor, const glm::vec3 _specularColor, const float _shininess)
+               const glm::vec3 _diffuseColor, const glm::vec3 _specularColor, const float _shininess, Texture* _texture, Texture* _normalTexture)
     : diffuseColor(_diffuseColor), specularColor(_specularColor), shininess(_shininess),
-      shape(_shape), objectId(_objectId), drawMe(true)
-     
-{}
+      shape(_shape), objectId(_objectId), drawMe(true), texture(_texture),normalTexture(_normalTexture)
+{
+
+}
 
 
 void Object::Draw(ShaderProgram* program, glm::mat4& objectTr)
@@ -77,7 +80,30 @@ void Object::Draw(ShaderProgram* program, glm::mat4& objectTr)
     // load the texture into a texture-unit of your choice and inform
     // the shader program of the texture-unit number.  See
     // Texture::Bind for the 4 lines of code to do exactly that.
-    
+    if (texture != NULL) {
+        
+        int unit = 0; // Can be 0 through (at least) 15
+        glActiveTexture(GL_TEXTURE0 + unit);
+        glBindTexture(GL_TEXTURE_2D, texture->textureId);//
+        loc = glGetUniformLocation(program->programId, "tex");
+        glUniform1i(loc, unit);
+        
+    }
+
+    if (normalTexture != NULL) {
+        int normalUnit = 1; // for normal map it is  1
+        glActiveTexture(GL_TEXTURE0 + normalUnit);
+        glBindTexture(GL_TEXTURE_2D, normalTexture->textureId);
+
+        // Set the sampler in the shader to use this texture unit
+        int normalLoc = glGetUniformLocation(program->programId, "normalMap");
+        glUniform1i(normalLoc, normalUnit);
+    }
+
+    glUniform3f(glGetUniformLocation(program->programId, "color1"), 1.0f, 1.0f, 1.0f);  // White
+    glUniform3f(glGetUniformLocation(program->programId, "color2"), 0.0f, 0.0f, 0.0f);  // Black
+    glUniform1f(glGetUniformLocation(program->programId, "scale"), 10.0f);
+
 
     // Draw this object
     CHECKERROR;
@@ -86,6 +112,7 @@ void Object::Draw(ShaderProgram* program, glm::mat4& objectTr)
             shape->DrawVAO();
     CHECKERROR;
 
+        glBindTexture(GL_TEXTURE_2D, 0);
 
     CHECKERROR;
     // Recursively draw each sub-objects, each with its own transformation.

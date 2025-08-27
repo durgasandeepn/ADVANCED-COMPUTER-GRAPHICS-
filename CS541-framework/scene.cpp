@@ -99,7 +99,7 @@ Object* SphereOfSpheres(Shape* SpherePolygons)
 ////////////////////////////////////////////////////////////////////////
 // Constructs a -1...+1  quad (canvas) framed by four (elongated) boxes
 Object* FramedPicture(const glm::mat4& modelTr, const int objectId, 
-                      Shape* BoxPolygons, Shape* QuadPolygons)
+                      Shape* BoxPolygons, Shape* QuadPolygons, Texture* _texture)
 {
     // This draws the frame as four (elongated) boxes of size +-1.0
     float w = 0.05;             // Width of frame boards.
@@ -116,7 +116,7 @@ Object* FramedPicture(const glm::mat4& modelTr, const int objectId,
     frame->add(ob, Translate(-1.0-w, 0.0, 0.0)*Scale(w, w, 1.0+2*w));
 
     ob = new Object(QuadPolygons, objectId,
-                    woodColor, glm::vec3(0.0, 0.0, 0.0), 10.0);
+                    woodColor, glm::vec3(0.0, 0.0, 0.0), 10.0,_texture);
     frame->add(ob, Rotate(0,90));
 
     return frame;
@@ -165,9 +165,9 @@ void Scene::InitializeScene()
     glm::vec3 lowSpecular(0.03);
     //glm::vec3 lowSpecular(0.3, 0.3, 0.3);
     //Alpha values
-    float RoughSurface = 3.0f;//ground
-    float PolishedSurface = 120.0f;//teapot
-    float ModerateSmoothSurface = 10.0f;//podium
+    RoughSurface = 3.0f;//ground
+    PolishedSurface = 120.0f;//teapot
+    ModerateSmoothSurface = 10.0f;//podium
 
     CHECKERROR;
     objectRoot = new Object(NULL, nullId);
@@ -214,31 +214,51 @@ void Scene::InitializeScene()
     glm::vec3 black(0.0, 0.0, 0.0);
     glm::vec3 brightSpec(0.5, 0.5, 0.5);//0.03
     glm::vec3 polishedSpec(0.3, 0.3, 0.3);//0.03
- 
+    //
     // Creates all the models from which the scene is composed.  Each
     // is created with a polygon shape (possibly NULL), a
     // transformation, and the surface lighting parameters Kd, Ks, and
     // alpha.
-
+    //
     // @@ This is where you could read in all the textures and
     // associate them with the various objects being created in the
     // next dozen lines of code.
+    teapotTexture = new Texture("textures/cracks.png");
+    floorTexture = new Texture("textures/6670-diffuse.jpg");
+    podiumTexture = new Texture("textures/Brazilian_rosewood_pxr128.png");
+    groundTexture = new Texture("textures/grass.jpg");
+    roomTexture = new Texture("textures/Standard_red_pxr128.png");
+    HouseTexture = new Texture("textures/my-house-01.png");
+    //SkyTexture = new Texture("skys/sky.jpg");
+    SkyTexture = new Texture("skys/Ocean.png");
+
+
+    FloorNormalT = new Texture("textures/6670-normal.jpg");
+    PodiumNormalT = new Texture("textures/Brazilian_rosewood_pxr128_normal.png");
+    RipplesNormalT = new Texture("textures/ripples_normalmap.png");
+    BricksNormalT = new Texture("textures/Standard_red_pxr128_normal.png");
+
+
 
     // @@ To change an object's surface parameters (Kd, Ks, or alpha),
     // modify the following lines.
-    
     central    = new Object(NULL, nullId);
     anim       = new Object(NULL, nullId);
-    room       = new Object(RoomPolygons, roomId, brickColor, black, 1);
-    floor = new Object(FloorPolygons, floorId, floorColor, black, RoughSurface);//1);
-    teapot     = new Object(TeapotPolygons, teapotId, brassColor, lowSpecular, PolishedSurface);
-    podium     = new Object(BoxPolygons, boxId, glm::vec3(woodColor), lowSpecular, ModerateSmoothSurface);
-    sky        = new Object(SpherePolygons, skyId, black, black, 0);
-    ground = new Object(GroundPolygons, groundId, grassColor, black, RoughSurface);//1);
-    sea        = new Object(SeaPolygons, seaId, waterColor, lowSpecular, PolishedSurface);
-    leftFrame  = FramedPicture(Identity, lPicId, BoxPolygons, QuadPolygons);
-    rightFrame = FramedPicture(Identity, rPicId, BoxPolygons, QuadPolygons); 
+    room       = new Object(RoomPolygons, roomId, brickColor, black, 1, roomTexture, BricksNormalT);//texture
+    floor = new Object(FloorPolygons, floorId, floorColor, black, RoughSurface, floorTexture, FloorNormalT);//texture
+    teapot = new Object(TeapotPolygons, teapotId, brassColor, lowSpecular, PolishedSurface, teapotTexture);//texture
+    podium = new Object(BoxPolygons, boxId, glm::vec3(woodColor), lowSpecular, ModerateSmoothSurface, podiumTexture, PodiumNormalT);//texture
+    sky        = new Object(SpherePolygons, skyId, black, black,0, SkyTexture);
+    objectRoot->add(sky, Scale(2000.0, 2000.0, 2000.0));
+    ground = new Object(GroundPolygons, groundId, grassColor, black, RoughSurface, groundTexture);//texture
+    sea        = new Object(SeaPolygons, seaId, waterColor, lowSpecular, PolishedSurface, SkyTexture, RipplesNormalT);
+    leftFrame  = FramedPicture(Identity, lPicId, BoxPolygons, QuadPolygons, NULL);//No texture
+    rightFrame = FramedPicture(Identity, rPicId, BoxPolygons, QuadPolygons,HouseTexture);//texture
     spheres    = SphereOfSpheres(SpherePolygons);
+
+
+    CHECKERROR;
+
 #ifdef REFL
     spheres->drawMe = true;
 #else
@@ -400,6 +420,9 @@ void Scene::DrawScene()
     }
     
 
+
+
+
     CHECKERROR;
     // Calculate the light's position from lightSpin, lightTilt, lightDist
     lightPos = glm::vec3(lightDist*cos(lightSpin*rad)*sin(lightTilt*rad),
@@ -412,7 +435,6 @@ void Scene::DrawScene()
 
         (*m)->animTr = Rotate(2, atime);
 
-    
 
     eye.z = 2 + proceduralground->HeightAt(eye.x, eye.y);;
 

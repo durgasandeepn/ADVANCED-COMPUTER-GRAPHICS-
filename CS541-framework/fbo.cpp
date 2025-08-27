@@ -17,7 +17,7 @@ void FBO::CreateFBO(const int w, const int h)
     width = w;
     height = h;
 
-    glGenFramebuffersEXT(1, &fboID);
+    glGenFramebuffersEXT(1, &fboID);//Gen to generate 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboID);
 
     // Create a render buffer, and attach it to FBO's depth attachment
@@ -59,7 +59,7 @@ void FBO::BindFBO() { glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboID); }
 void FBO::UnbindFBO() { glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); }
 
 void FBO::BindTexture(const int unit, const int programId, const std::string& name)
-{
+{//
     glActiveTexture((gl::GLenum)((int)GL_TEXTURE0 + unit));
     glBindTexture(GL_TEXTURE_2D, textureID);
     int loc = glGetUniformLocation(programId, name.c_str());
