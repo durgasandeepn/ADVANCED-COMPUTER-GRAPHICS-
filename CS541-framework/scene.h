@@ -41,6 +41,27 @@ public:
     GLFWwindow* window;
 
     // @@ Declare interactive viewing variables here. (spin, tilt, ry, front back, ...)
+    float spin;
+    float tilt;
+    float tx;
+    float ty;
+    float zoom;
+    float rx;
+    float ry;
+    float front;
+    float back;
+
+    glm::vec3 eye = glm::vec3(0, -20, 0);
+    float Speed;
+    bool w_down;
+    bool a_down;
+    bool s_down;
+    bool d_down;
+    bool transformation_mode;
+    double time_since_last_refresh;
+    float step;
+    double CurrentTime;
+    double PreviousTime;
 
     // Light parameters
     float lightSpin, lightTilt, lightDist;

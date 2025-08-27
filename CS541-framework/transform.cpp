@@ -24,21 +24,54 @@ float* Pntr(glm::mat4& M)
 const float pi = 3.14159f;
 glm::mat4 Rotate(const int i, const float theta)
 {
-    glm::mat4 R(1.0);
+    glm::mat4 R = glm::mat4(1.0f);
+    float CosAng = glm::cos(theta * pi / 180);
+    float SinAng = glm::sin(theta * pi / 180);
+
+    //theta is angle sent
+    if (i == 0) //X Rotation
+    {
+        R[1][1] = CosAng;
+        R[2][1] = -SinAng;
+        R[1][2] = SinAng;
+        R[2][2] = CosAng;
+    }
+    else if (i == 1)//Y Rotation
+    {
+        R[0][0] = CosAng;
+        R[2][0] = SinAng;
+        R[0][2] = -SinAng;
+        R[2][2] = CosAng;
+    }
+    else if (i == 2)//Z Rotation
+    {
+        R[0][0] = CosAng;
+        R[1][0] = -SinAng;
+        R[0][1] = SinAng;
+        R[1][1] = CosAng;
+    }
+
     return R;
 }
 
 // Return a scale matrix
 glm::mat4 Scale(const float x, const float y, const float z)
 {
-    glm::mat4 S(1.0);
+    glm::mat4 S = glm::mat4(1.0f);
+    S[0][0] = x;
+    S[1][1] = y;
+    S[2][2] = z;
     return S;
 }
 
 // Return a translation matrix
 glm::mat4 Translate(const float x, const float y, const float z)
 {
-    glm::mat4 T(1.0);
+    glm::mat4 T = glm::mat4(1.0);
+    T[3][0] = x;
+    T[3][1] = y;
+    T[3][2] = z;
+
     return T;
 }
 
@@ -47,6 +80,12 @@ glm::mat4 Perspective(const float rx, const float ry,
              const float front, const float back)
 {
     glm::mat4 P(1.0);
+    P[0][0] = 1 / rx;
+    P[1][1] = 1 / ry;
+    P[2][2] = -((back + front) / (back - front));
+    P[3][2] = -((2 * (front * back) / (back - front)));
+    P[2][3] = -1;
+
     return P;
 }
 

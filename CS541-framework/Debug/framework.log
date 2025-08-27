@@ -1,6 +1,6 @@
 ﻿cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  emulator.cpp
   transform.cpp
+  texture.cpp
   simplexnoise.cpp
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\simplexnoise.cpp(179,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\simplexnoise.cpp(185,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
@@ -73,119 +73,51 @@ C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRA
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\shapes.cpp(679,13): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\shapes.cpp(684,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\shapes.cpp(685,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  object.cpp
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\object.cpp(93,25): warning C4018: '<': signed/unsigned mismatch
-  interact.cpp
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(109,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(110,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(114,30): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(115,30): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-  texture.cpp
   shader.cpp
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\shader.cpp(26,16): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
   scene.cpp
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(47,24): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(48,31): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(86,23): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(86,62): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(87,42): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(93,85): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(93,77): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(93,69): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(104,13): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(112,43): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(113,44): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(114,33): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(114,62): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(115,34): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(115,63): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(232,48): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(234,48): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(242,56): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(242,51): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(242,46): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(249,46): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(249,72): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(249,67): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(249,62): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(250,47): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(250,73): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(250,68): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(250,63): warning C4305: 'argument': truncation from 'double' to 'const float'
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(297,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(298,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(301,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(302,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(303,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(305,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(306,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(307,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(308,22): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(309,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(310,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(311,23): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(312,22): warning C4305: '=': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(343,34): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-  imgui_widgets.cpp
-  imgui_draw.cpp
-  imgui_demo.cpp
-  imgui.cpp
-  imgui_impl_opengl3.cpp
-  imgui_impl_glfw.cpp
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(48,24): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(49,31): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(87,23): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(87,62): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(88,42): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(94,85): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(94,77): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(94,69): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(105,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(113,43): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(114,44): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(115,33): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(115,62): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(116,34): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(116,63): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(254,48): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(256,48): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(264,56): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(264,51): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(264,46): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(271,46): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(271,72): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(271,67): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(271,62): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(272,47): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(272,73): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(272,68): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(272,63): warning C4305: 'argument': truncation from 'double' to 'const float'
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(376,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\scene.cpp(405,34): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+  object.cpp
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\object.cpp(93,25): warning C4018: '<': signed/unsigned mismatch
+  interact.cpp
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(150,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(151,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(155,30): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(156,30): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(161,30): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\interact.cpp(162,30): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   framework.cpp
   fbo.cpp
+  emulator.cpp
   Generating Code...
 cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
   rply.c
@@ -200,10 +132,7 @@ C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRA
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\rply.c(1243,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\rply.c(1246,9): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\rply.c(1268,5): warning C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-fbo.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   framework.vcxproj -> C:\Users\dasas\OneDrive\Documents\GitHub\New_GithubAccount\ADVANCED-COMPUTER-GRAPHICS-\CS541-framework\Debug\framework.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
-  .\libs\glbinding.dll
-  1 File(s) copied
+  0 File(s) copied

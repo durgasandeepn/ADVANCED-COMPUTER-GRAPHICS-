@@ -13,6 +13,7 @@
 // others are set by the framework in response to user mouse/keyboard
 // interactions.  All of them can be used to draw the scene.
 
+
 #include "math.h"
 #include <iostream>
 #include <stdlib.h>
@@ -131,7 +132,28 @@ void Scene::InitializeScene()
     CHECKERROR;
 
     // @@ Initialize interactive viewing variables here. (spin, tilt, ry, front back, ...)
-    
+    spin = 0.0f;  // Spin angle
+    tilt = 30.0f; // Tilt angle
+    tx = 0.0f;    // Translation in x-axis
+    ty = 0.0f;    // Translation in y-axis
+    zoom = 25.0f; // Zoom factor 25.0f
+    rx = ry * width / height; // Recalculate rx based on aspect ratio
+    ry = 0.4f;    // Fixed vertical frustum height
+    front = 0.1f; // Front clipping plane 0.5f
+    back = 5000.0f; // Back clipping plane 5000.0f;
+    //
+    eye = glm::vec3(0, -20, 0);
+    Speed = 10;
+    w_down = false;
+    a_down = false;
+    s_down = false;
+    d_down = false;
+    transformation_mode = false;//Tab key Tassk2 and Task3
+    time_since_last_refresh = 0;
+    step = 0;
+    CurrentTime = 0;
+    PreviousTime = 0;
+
     // Set initial light parameters
     lightSpin = 150.0;
     lightTilt = -45.0;
@@ -288,12 +310,12 @@ void Scene::DrawMenu()
 
 void Scene::BuildTransforms()
 {
-    
-
     // @@ When you are ready to try interactive viewing, replace the
     // following hard coded values for WorldProj and WorldView with
     // transformation matrices calculated from variables such as spin,
     // tilt, tr, ry, front, and back.
+    
+    /*
     WorldProj[0][0]=  2.368;
     WorldProj[1][0]= -0.800;
     WorldProj[2][0]=  0.000;
@@ -311,25 +333,64 @@ void Scene::BuildTransforms()
     WorldProj[2][3]= -0.480;
     WorldProj[3][3]= 43.442;
     
+    
     WorldView[3][0]= 0.0;
     WorldView[3][1]= 0.0;
     WorldView[3][2]= 0.0;
+    */
+    
+    rx = ry * ((float)width / (float)height);
+    if (transformation_mode == false) {
+    
+        WorldView = Translate(tx, ty, -zoom) * Rotate(0, tilt - 90) * Rotate(2, spin);
+        WorldProj = Perspective(rx, ry, front, back);
+    }
+    else  if (transformation_mode == true)
+    {
+        WorldView = Rotate(0,(tilt - 90)) * Rotate(2,spin) * Translate(-eye.x, -eye.y, -eye.z);
+        WorldProj = Perspective(rx,ry, front, back);
+    }
 
     // @@ Print the two matrices (in column-major order) for
     // comparison with the project document.
-    //std::cout << "WorldView: " << glm::to_string(WorldView) << std::endl;
-    //std::cout << "WorldProj: " << glm::to_string(WorldProj) << std::endl;
+    /*
+    std::cout << "WorldView: " << glm::to_string(WorldView) << std::endl;
+    std::cout << "WorldProj: " << glm::to_string(WorldProj) << std::endl;
+    */
+    
 }
 
 ////////////////////////////////////////////////////////////////////////
 // Procedure DrawScene is called whenever the scene needs to be
 // drawn. (Which is often: 30 to 60 times per second are the common
 // goals.)
+const float pi = 3.14159f;
 void Scene::DrawScene()
 {
     // Set the viewport
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
+
+    CurrentTime = glfwGetTime();
+    time_since_last_refresh = CurrentTime - PreviousTime;
+    step = Speed * time_since_last_refresh;
+
+    if (w_down == true) {
+        eye += step * glm::vec3(sin(spin * (pi / 180)), cos(spin * (pi / 180)), 0.0f);
+    }
+    if(s_down == true)
+    {
+        eye -= step * glm::vec3(sin(spin * (pi / 180)), cos(spin * (pi / 180)), 0.0f);
+    }
+    if(d_down == true)
+    {
+        eye += step * glm::vec3(cos(spin * (pi / 180)), -sin(spin * (pi / 180)), 0.0f);
+    }
+    if(a_down == true)
+    {
+        eye -= step * glm::vec3(cos(spin * (pi / 180)), -sin(spin * (pi / 180)), 0.0f);
+    }
+    
 
     CHECKERROR;
     // Calculate the light's position from lightSpin, lightTilt, lightDist
@@ -340,7 +401,12 @@ void Scene::DrawScene()
     // Update position of any continuously animating objects
     double atime = 360.0*glfwGetTime()/36;
     for (std::vector<Object*>::iterator m=animated.begin();  m<animated.end();  m++)
+
         (*m)->animTr = Rotate(2, atime);
+
+    
+
+    eye.z = 2 + proceduralground->HeightAt(eye.x, eye.y);;
 
     BuildTransforms();
 
@@ -402,6 +468,8 @@ void Scene::DrawScene()
     // Turn off the shader
     lightingProgram->UnuseShader();
 
+
+    PreviousTime = glfwGetTime();
     ////////////////////////////////////////////////////////////////////////////////
     // End of Lighting pass
     ////////////////////////////////////////////////////////////////////////////////

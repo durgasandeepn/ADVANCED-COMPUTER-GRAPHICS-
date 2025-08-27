@@ -37,6 +37,47 @@ void Keyboard(GLFWwindow* window, int key, int scancode, int action, int mods)
     printf("Keyboard %c(%d);  S%d %s M%d\n", key, key, scancode, ACTION[action].c_str(), mods);
     fflush(stdout);
     
+    if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+
+        if (scene.transformation_mode == false) {
+            scene.transformation_mode = true;
+        }
+        else if (scene.transformation_mode == true) {
+            scene.transformation_mode = false;
+        }
+    }
+
+
+    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+        scene.w_down = true;
+
+    }else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+        scene.s_down = true;
+
+    }else if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+        scene.a_down = true;
+    }
+    else if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+        scene.d_down = true;
+    }
+
+    if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
+        scene.w_down = false;
+
+    }
+    else if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+        scene.s_down = false;
+
+    }
+    else if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+        scene.a_down = false;
+    }
+    else if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
+        scene.d_down = false;
+    }
+
+
+
     // Track SHIFT/NO-SHIFT transitions. (The mods parameter should do this, but doesn't.)
     if (key==GLFW_KEY_LEFT_SHIFT || key==GLFW_KEY_RIGHT_SHIFT)
         shifted = !shifted;
@@ -115,11 +156,44 @@ void MouseMotion(GLFWwindow* window, double x, double y)
         scene.lightTilt -= dy/3.0; }
 
     else if (leftDown) {
+
+        if (dx != 0 || dy != 0) {
+            scene.spin += dx / 3.0;
+            scene.tilt += dy / 3.0;
+        }
+
     }
 
     if (middleDown) { }
 
     if (rightDown) {
+        
+        float x1 = 0, y1 = 0;
+        if (dx != 0 || dy != 0) {
+
+            if (dx > 0) { 
+                x1 = 1; 
+            }else if(dx < 0){ 
+                x1 = -1;   
+            }else {
+                x1 = 0;
+            }
+            
+            if (dy > 0) { 
+                y1 = -1; 
+            }else if (dy < 0) {
+                y1 = 1;   
+            }
+            else {
+                y1 = 0;
+            }
+
+            scene.tx += x1/5;
+            scene.ty += y1/ 5;
+        }
+        
+        //printf("%d %d %f %f  %d\n", dy, dx, scene.tx, scene.ty, (float)n/5 );
+
     }
 
     // Record this position
@@ -145,9 +219,11 @@ void Scroll(GLFWwindow* window, double x, double y)
 
         
     else if (y>0.0) {
+        scene.zoom += 1.0;
     }
 
     else if (y<0.0) {
+        scene.zoom -= 1.0;
     }
 }
 
