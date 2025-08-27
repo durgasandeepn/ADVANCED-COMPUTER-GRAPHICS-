@@ -159,11 +159,18 @@ void Scene::InitializeScene()
     lightTilt = -45.0;
     lightDist = 100.0;
     // @@ Perhaps initialize additional scene lighting values here. (lightVal, lightAmb)
-    
+    //
+    //LIGHT PARAMETERS
+    //
+    glm::vec3 lowSpecular(0.03);
+    //glm::vec3 lowSpecular(0.3, 0.3, 0.3);
+    //Alpha values
+    float RoughSurface = 3.0f;//ground
+    float PolishedSurface = 120.0f;//teapot
+    float ModerateSmoothSurface = 10.0f;//podium
 
     CHECKERROR;
     objectRoot = new Object(NULL, nullId);
-
     
     // Enable OpenGL depth-testing
     glEnable(GL_DEPTH_TEST);
@@ -200,13 +207,13 @@ void Scene::InitializeScene()
     glm::vec3 woodColor(87.0/255.0, 51.0/255.0, 35.0/255.0);
     glm::vec3 brickColor(134.0/255.0, 60.0/255.0, 56.0/255.0);
     glm::vec3 floorColor(6*16/255.0, 5.5*16/255.0, 3*16/255.0);
-    glm::vec3 brassColor(0.5, 0.5, 0.1);
+    glm::vec3 brassColor(0.5, 0.5, 0.1);//(0.03, 0.03, 0.03);
     glm::vec3 grassColor(62.0/255.0, 102.0/255.0, 38.0/255.0);
     glm::vec3 waterColor(0.3, 0.3, 1.0);
 
     glm::vec3 black(0.0, 0.0, 0.0);
-    glm::vec3 brightSpec(0.5, 0.5, 0.5);
-    glm::vec3 polishedSpec(0.3, 0.3, 0.3);
+    glm::vec3 brightSpec(0.5, 0.5, 0.5);//0.03
+    glm::vec3 polishedSpec(0.3, 0.3, 0.3);//0.03
  
     // Creates all the models from which the scene is composed.  Each
     // is created with a polygon shape (possibly NULL), a
@@ -223,12 +230,12 @@ void Scene::InitializeScene()
     central    = new Object(NULL, nullId);
     anim       = new Object(NULL, nullId);
     room       = new Object(RoomPolygons, roomId, brickColor, black, 1);
-    floor      = new Object(FloorPolygons, floorId, floorColor, black, 1);
-    teapot     = new Object(TeapotPolygons, teapotId, brassColor, brightSpec, 120);
-    podium     = new Object(BoxPolygons, boxId, glm::vec3(woodColor), polishedSpec, 10); 
+    floor = new Object(FloorPolygons, floorId, floorColor, black, RoughSurface);//1);
+    teapot     = new Object(TeapotPolygons, teapotId, brassColor, lowSpecular, PolishedSurface);
+    podium     = new Object(BoxPolygons, boxId, glm::vec3(woodColor), lowSpecular, ModerateSmoothSurface);
     sky        = new Object(SpherePolygons, skyId, black, black, 0);
-    ground     = new Object(GroundPolygons, groundId, grassColor, black, 1);
-    sea        = new Object(SeaPolygons, seaId, waterColor, brightSpec, 120);
+    ground = new Object(GroundPolygons, groundId, grassColor, black, RoughSurface);//1);
+    sea        = new Object(SeaPolygons, seaId, waterColor, lowSpecular, PolishedSurface);
     leftFrame  = FramedPicture(Identity, lPicId, BoxPolygons, QuadPolygons);
     rightFrame = FramedPicture(Identity, rPicId, BoxPolygons, QuadPolygons); 
     spheres    = SphereOfSpheres(SpherePolygons);
@@ -351,6 +358,7 @@ void Scene::BuildTransforms()
         WorldProj = Perspective(rx,ry, front, back);
     }
 
+    
     // @@ Print the two matrices (in column-major order) for
     // comparison with the project document.
     /*
@@ -446,7 +454,7 @@ void Scene::DrawScene()
     // @@ The scene specific parameters (uniform variables) used by
     // the shader are set here.  Object specific parameters are set in
     // the Draw procedure in object.cpp
-    
+   
     loc = glGetUniformLocation(programId, "WorldProj");
     glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(WorldProj));
     loc = glGetUniformLocation(programId, "WorldView");
@@ -457,6 +465,14 @@ void Scene::DrawScene()
     glUniform3fv(loc, 1, &(lightPos[0]));   
     loc = glGetUniformLocation(programId, "mode");
     glUniform1i(loc, mode);
+
+    loc = glGetUniformLocation(programId, "Light");
+    glUniform3fv(loc, 1, &(Light[0]));
+    loc = glGetUniformLocation(programId, "Ambient");
+    glUniform3fv(loc, 1, &(Ambient[0]));
+   
+
+
     CHECKERROR;
 
     // Draw all objects (This recursively traverses the object hierarchy.)

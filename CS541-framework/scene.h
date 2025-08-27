@@ -67,7 +67,16 @@ public:
     float lightSpin, lightTilt, lightDist;
     glm::vec3 lightPos;
     // @@ Perhaps declare additional scene lighting values here. (lightVal, lightAmb)
-    
+
+    glm::vec3 lightVal;// Brightness for micro-facet BRDF
+    glm::vec3 lightAmb;//ambient light
+    glm::vec3 lowSpecular;
+    float RoughSurface;//ground
+    float PolishedSurface;//teapot
+    float ModerateSmoothSurface;//podium
+//   glm::vec3 Light, Ambient;
+    glm::vec3 Light = glm::vec3(3.0, 3.0, 3.0);
+    glm::vec3 Ambient = glm::vec3(0.2, 0.2, 0.2);//vec3(0.1, 0.1, 0.1);//vec3(0.2, 0.2, 0.2);
 
 
     int mode; // Extra mode indicator hooked up to number keys and sent to shader
