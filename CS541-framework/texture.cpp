@@ -89,4 +89,3 @@ void Texture::UnbindTexture(const int unit)
     glActiveTexture((gl::GLenum)((int)GL_TEXTURE0 + unit));
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-

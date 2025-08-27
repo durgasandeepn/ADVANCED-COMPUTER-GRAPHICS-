@@ -6,6 +6,8 @@
 // return the product of any two such.
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 #include "math.h"
 #include "transform.h"
@@ -79,7 +81,7 @@ glm::mat4 Translate(const float x, const float y, const float z)
 glm::mat4 Perspective(const float rx, const float ry,
              const float front, const float back)
 {
-    glm::mat4 P(1.0);
+    glm::mat4 P(0.0);
     P[0][0] = 1 / rx;
     P[1][1] = 1 / ry;
     P[2][2] = -((back + front) / (back - front));
@@ -88,5 +90,44 @@ glm::mat4 Perspective(const float rx, const float ry,
 
     return P;
 }
+
+
+//
+//re-defined it  
+glm::mat4 LookAt(const glm::vec3 Eye, const glm::vec3 Center, const glm::vec3 Up)
+{
+    //Camera Forward
+    glm::vec3 V = glm::normalize(Center - Eye);
+    //Right Vector
+    glm::vec3 A = glm::normalize(glm::cross(V, Up));
+    //Camera Up
+    glm::vec3 B = glm::cross(A,V);
+    
+    //glm::mat4 T = Translate(-Eye.x, -Eye.y, -Eye.z);//Translating the Eye to Origin
+    
+    glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(-Eye.x, -Eye.y, -Eye.z));  // Translate Eye to Origin
+
+    /*//row major
+    glm::mat4 Rotation = glm::mat4( A.x, A.y, A.z, 0.0f,
+                                    B.x, B.y, B.z, 0.0f,
+                                   -V.x, -V.y, -V.z, 0.0f,
+                                   0.0f, 0.0f, 0.0f, 1.0f);
+    */
+
+    //Column Major
+    glm::mat4 Rotation = glm::mat4( A.x, B.x, -V.x, 0.0f,
+                                    A.y, B.y, -V.y, 0.0f,
+                                    A.z, B.z, -V.z, 0.0f,
+                                    0.0f, 0.0f, 0.0f, 1.0f);
+
+
+    glm::mat4 LookAt = Rotation * T;
+
+    return LookAt;
+
+}
+
+
+
 
 

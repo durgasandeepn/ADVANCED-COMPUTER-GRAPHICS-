@@ -24,6 +24,15 @@ in vec2 texCoord;//
 uniform sampler2D tex;//
 uniform sampler2D normalMap;
 
+//Shadow
+//uniform sampler2DShadow shadowMap;
+uniform sampler2D shadowMap;
+in vec4 ShadowCoord;
+vec2 shadowIndex;
+float lightDepth;
+float pixelDepth;
+bool inShadow;
+//
 uniform int objectId;
 uniform vec3 diffuse;
 
@@ -55,7 +64,14 @@ vec3 delta;
 
 void main()
 {
-    vec3 N = normalize(normalVec);
+	/*
+	uv = gl_FragCoord.xy/vec2(750,750); // (or whatever screen size)//750,750 given in test pdf
+	FragColor.xyz = vec3(texture(shadowMap, uv).w/100.0); // or similar
+	FragColor.w = 1.0;
+	return; // which disables all further code in the shader
+	*/
+
+	vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
 	vec3 V = normalize(eyeVec);
 	
@@ -63,7 +79,7 @@ void main()
 	float LN = max(dot(L,N),0.0);
 	float HN = max(dot(H,N),0.0);
 
-    vec3 Kd = diffuse;   //color
+    vec3 Kd = diffuse;//color
 	vec3 Ks = specular;
 
 	vec3 Ii = Light;
@@ -73,8 +89,29 @@ void main()
 	vec3 T = normalize(tanVec);
     vec3 B = normalize(cross(T,N));
 
-	//if(teapotId	
+	shadowIndex = ShadowCoord.xy/ShadowCoord.w;
 
+	if (shadowIndex.x >= 0.0 && shadowIndex.x <= 1.0 &&
+        shadowIndex.y >= 0.0 && shadowIndex.y <= 1.0 &&
+        ShadowCoord.w > 0.0)
+    {
+        // Sample the shadow map (depth value from light's perspective)
+        lightDepth = texture2D(shadowMap, shadowIndex).w;
+        pixelDepth = ShadowCoord.w - 0.05;
+		
+        // Determine if the fragment is in shadow (if pixelDepth > lightDepth)
+		inShadow =  (pixelDepth > lightDepth);
+	
+    }
+    else
+    {
+        inShadow = false;  // Default to being in shadow if out of bounds
+    }
+
+
+	//inShadow = false;
+	
+	//
 	//
     // A checkerboard pattern to break up large flat expanses.  Remove when using textures.
 	/*
@@ -93,7 +130,7 @@ void main()
 		NormalMapPresent = false;
 
 	}else if(objectId == boxId){//ok
-
+		
 		uv = fract(texCoord * 1);
 		TexturePresent = true;
 		NormalMapPresent = true;
@@ -164,7 +201,7 @@ void main()
 
 
 	}else if(objectId == lPicId) {//ok
-		//Procedural texture
+		// Procedural texture
 		// Checker board
 		checker = step(0.5, mod(floor(texCoord.x * scale) + floor(texCoord.y * scale), 2.0));
 		vec3 colorN = mix(color1, color2, checker);
@@ -184,14 +221,9 @@ void main()
 
 	if(NormalMapPresent == true){
 		//NormalMap
-
 		delta = texture(normalMap, uv).xyz;
 		delta = (delta * 2.0) - vec3(1,1,1);
-//		N = normalize(normalVec);
-//		T = normalize(tanVec);
-//		B = normalize(cross(T,N));	
 		N = (delta.x * T) + (delta.y * B) + (delta.z * N);
-		//N = delta.x * T + delta.y * B + delta.z * N;
 	}
 
 	H = normalize(L+V);
@@ -203,11 +235,9 @@ void main()
 	//reflections are to be done here 
 	if(objectId == seaId){
 
-		//vec3 R = -1.0 * (2.0 * dot(N, V) * (N - V));
 	 	vec3 R = -1.0 * (2.0 * dot(N , V) * (N - V));
 		uv[0] = -atan(R.y, R.x) / (2.0 * Pi);
 		uv[1] = acos(R.z) / Pi;
-		//uv = clamp(uv, 0.0, 1.0);
 		color = texture(tex,uv);
 	}
 
@@ -225,8 +255,21 @@ void main()
 	
 		BRDF = (Kd/Pi) + (F * G * D) / 4.0;
 		//FragColor.xyz = (Ia * Kd) + Ii*(LN)	*(BRDF * color.xyz);
-	
-		FragColor.xyz = (Ia * Kd) + Ii*(LN)	* (BRDF);
+		
+		//
+		// If in shadow, only apply ambient lighting
+        if (inShadow == true) 
+		{
+			//In Shadow
+			FragColor.xyz = (Ia * Kd);  // Ambient lighting only
+
+		} else if (inShadow == false) 
+		{
+			//In lighting
+			FragColor.xyz = (Ia * Kd) + Ii*(LN)	* (BRDF);
+		}
+
+		
 		FragColor.w = 1.0;
 		
 	}else if(objectId == skyId || objectId == seaId) {
@@ -236,7 +279,7 @@ void main()
 	}
 
 
-
+	
 
 }
 

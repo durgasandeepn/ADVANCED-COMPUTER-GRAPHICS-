@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////
 #version 330
 
-uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr;
+uniform mat4 WorldView, WorldInverse, WorldProj, ModelTr, NormalTr, ShadowMatrix;
 
 in vec4 vertex;
 in vec3 vertexNormal;
@@ -18,11 +18,17 @@ out vec3 normalVec, lightVec, eyeVec;
 out vec2 texCoord;//
 uniform vec3 lightPos;
 
+out vec4 ShadowCoord;
+
+
 void main()
 {      
+
 	tanVec =  mat3(ModelTr)*vertexTangent; 
 
-    gl_Position = WorldProj*WorldView*ModelTr*vertex;
+    gl_Position = WorldProj * WorldView * ModelTr * vertex;
+	
+	ShadowCoord = ShadowMatrix * ModelTr * vertex;//
     
     vec3 worldPos = (ModelTr*vertex).xyz;
 
@@ -32,7 +38,8 @@ void main()
 	vec3 eyePos =(WorldInverse*vec4(0,0,0,1)).xyz;
 	lightVec=lightPos-worldPos;
 	eyeVec =eyePos-worldPos;
-   
+    
 	texCoord = vertexTexture;// 
+
 }
 

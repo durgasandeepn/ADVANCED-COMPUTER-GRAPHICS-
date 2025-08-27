@@ -128,8 +128,12 @@ Object* FramedPicture(const glm::mat4& modelTr, const int objectId,
 // number of other parameters.
 void Scene::InitializeScene()
 {
+    //
     glEnable(GL_DEPTH_TEST);
     CHECKERROR;
+
+    //ShadowTesting = DepthTestTest;
+    DepthFlag = true;
 
     // @@ Initialize interactive viewing variables here. (spin, tilt, ry, front back, ...)
     spin = 0.0f;  // Spin angle
@@ -154,6 +158,11 @@ void Scene::InitializeScene()
     CurrentTime = 0;
     PreviousTime = 0;
 
+    //Shadow Map Parameters
+    ShadowMap_Width = 1024;
+    ShadowMap_Height = 1024;
+
+
     // Set initial light parameters
     lightSpin = 150.0;
     lightTilt = -45.0;
@@ -175,6 +184,18 @@ void Scene::InitializeScene()
     // Enable OpenGL depth-testing
     glEnable(GL_DEPTH_TEST);
 
+    Fbo = new FBO(ShadowMap_Width, ShadowMap_Height);
+    Fbo->CreateFBO(ShadowMap_Width, ShadowMap_Height);
+
+    //
+    //Shadow Pass
+    ShadowProgram = new ShaderProgram();
+    ShadowProgram->AddShader("shadow.vert", GL_VERTEX_SHADER);
+    ShadowProgram->AddShader("shadow.frag", GL_FRAGMENT_SHADER);
+    glBindAttribLocation(ShadowProgram->programId, 0, "vertex");
+    ShadowProgram->LinkProgram();
+
+
     // Create the lighting shader program from source code files.
     // @@ Initialize additional shaders if necessary
     lightingProgram = new ShaderProgram();
@@ -186,7 +207,6 @@ void Scene::InitializeScene()
     glBindAttribLocation(lightingProgram->programId, 2, "vertexTexture");
     glBindAttribLocation(lightingProgram->programId, 3, "vertexTangent");
     lightingProgram->LinkProgram();
-
 
     
     // Create all the Polygon shapes
@@ -359,8 +379,6 @@ void Scene::BuildTransforms()
     WorldProj[1][3]=  0.831;
     WorldProj[2][3]= -0.480;
     WorldProj[3][3]= 43.442;
-    
-    
     WorldView[3][0]= 0.0;
     WorldView[3][1]= 0.0;
     WorldView[3][2]= 0.0;
@@ -378,7 +396,41 @@ void Scene::BuildTransforms()
         WorldProj = Perspective(rx,ry, front, back);
     }
 
+    //
+    //
+    // LIGHT CALCULATIONS //
+    //
+    lightDir = glm::normalize(lightPos);// 0 -LightPos
+    // World up direction (standard "up" is positive Y-axis)
+    worldUp = glm::vec3(0.0f, 0.0f, 1.0f);  // World "up" direction (Y-axis)
+    // Compute the right direction (perpendicular to both lightDir and worldUp)
+    rightDir = glm::normalize(glm::cross(worldUp, lightDir));  // Right direction
+    // Compute the up direction (perpendicular to both lightDir and rightDir)
+    upDir = glm::normalize(glm::cross(lightDir, rightDir));  // Up direction
+    //
+    L_ViewMatrix = LookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), worldUp);
+    /*
+    std::cout << glm::to_string(L_ViewMatrix) << std::endl;
+    std::cout<<std::endl;
+    std::cout<<std::endl;
+    std::cout << glm::to_string(glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 0.0f), worldUp)) << std::endl;
+    */
+
+//  L_ViewMatrix = LookAt(lightPos, lightDir, upDir);
+
+    Rx = 40/lightDist;
+    Ry = 40/lightDist;
     
+    L_ProjectionMatrix = Perspective(Rx, Ry, front, back/5);//back -> 5000
+    //std::cout << glm::to_string(L_ProjectionMatrix) << std::endl;
+    //
+    B = Translate(0.5, 0.5, 0.5) * Scale(0.5, 0.5, 0.5);
+    ShadowMatrix = B * L_ProjectionMatrix * L_ViewMatrix;
+    //
+    //
+      
+    //
+    //
     // @@ Print the two matrices (in column-major order) for
     // comparison with the project document.
     /*
@@ -420,9 +472,6 @@ void Scene::DrawScene()
     }
     
 
-
-
-
     CHECKERROR;
     // Calculate the light's position from lightSpin, lightTilt, lightDist
     lightPos = glm::vec3(lightDist*cos(lightSpin*rad)*sin(lightTilt*rad),
@@ -457,58 +506,114 @@ void Scene::DrawScene()
     ////////////////////////////////////////////////////////////////////////////////
 
     CHECKERROR;
-    int loc, programId;
+    int loc, programId, ShadowPrgId;
 
     ////////////////////////////////////////////////////////////////////////////////
-    // Lighting pass
+    // Shadow pass
     ////////////////////////////////////////////////////////////////////////////////
-    
-    // Choose the lighting shader
-    lightingProgram->UseShader();
-    programId = lightingProgram->programId;
-
+    //Create FBO
+    //
     // Set the viewport, and clear the screen
-    glViewport(0, 0, width, height);
-    glClearColor(0.5, 0.5, 0.5, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+    Fbo->BindFBO();
+
+    glViewport(0, 0, ShadowMap_Width, ShadowMap_Height);
+    glClearColor(0.5, 0.5, 0.5, 1.0);//no clarity
+    //glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //
+    //
+    // Choose the lighting shader
+    ShadowProgram->UseShader();
+    ShadowPrgId = ShadowProgram->programId;
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
 
 
-    // @@ The scene specific parameters (uniform variables) used by
-    // the shader are set here.  Object specific parameters are set in
-    // the Draw procedure in object.cpp
-   
-    loc = glGetUniformLocation(programId, "WorldProj");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(WorldProj));
-    loc = glGetUniformLocation(programId, "WorldView");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(WorldView));
-    loc = glGetUniformLocation(programId, "WorldInverse");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(WorldInverse));
-    loc = glGetUniformLocation(programId, "lightPos");
-    glUniform3fv(loc, 1, &(lightPos[0]));   
-    loc = glGetUniformLocation(programId, "mode");
-    glUniform1i(loc, mode);
-
-    loc = glGetUniformLocation(programId, "Light");
-    glUniform3fv(loc, 1, &(Light[0]));
-    loc = glGetUniformLocation(programId, "Ambient");
-    glUniform3fv(loc, 1, &(Ambient[0]));
-   
-
-
-    CHECKERROR;
-
-    // Draw all objects (This recursively traverses the object hierarchy.)
-    CHECKERROR;
-    objectRoot->Draw(lightingProgram, Identity);
-    CHECKERROR; 
-
+    loc = glGetUniformLocation(ShadowPrgId, "L_ViewMatrix");
+    glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(L_ViewMatrix));
+    loc = glGetUniformLocation(ShadowPrgId, "L_ProjectionMatrix");
+    glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(L_ProjectionMatrix));
     
-    // Turn off the shader
-    lightingProgram->UnuseShader();
 
+    CHECKERROR;
+    // Draw all objects (This recursively traverses the object hierarchy.)
+    objectRoot->Draw(ShadowProgram, Identity);
+    CHECKERROR;
+
+    glDisable(GL_CULL_FACE);
+
+    // Turn off the shader
+    ShadowProgram->UnuseShader();
+    //For the DepthTest
+    Fbo->UnbindFBO();
+    //
+    //
+    ////////////////////////////////////////////////////////////////////////////////
+    // End of Shadow pass
+    ////////////////////////////////////////////////////////////////////////////////
+
+
+    //if (DepthFlag == true){
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // Lighting pass
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // Choose the lighting shader
+        lightingProgram->UseShader();
+        programId = lightingProgram->programId;
+
+        // Set the viewport, and clear the screen
+        glViewport(0, 0, width, height);
+        glClearColor(0.5, 0.5, 0.5, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+        // @@ The scene specific parameters (uniform variables) used by
+        // the shader are set here.  Object specific parameters are set in
+        // the Draw procedure in object.cpp
+        //
+        Fbo->BindTexture(2, programId, "shadowMap");
+        //
+        loc = glGetUniformLocation(programId, "WorldProj");
+        glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(WorldProj));
+        loc = glGetUniformLocation(programId, "WorldView");
+        glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(WorldView));
+        loc = glGetUniformLocation(programId, "WorldInverse");
+        glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(WorldInverse));
+        loc = glGetUniformLocation(programId, "lightPos");
+        glUniform3fv(loc, 1, &(lightPos[0]));
+        loc = glGetUniformLocation(programId, "mode");
+        glUniform1i(loc, mode);
+        loc = glGetUniformLocation(programId, "Light");
+        glUniform3fv(loc, 1, &(Light[0]));
+        loc = glGetUniformLocation(programId, "Ambient");
+        glUniform3fv(loc, 1, &(Ambient[0]));
+        loc = glGetUniformLocation(programId, "ShadowMatrix");
+        glUniformMatrix4fv(loc, 1, GL_FALSE, Pntr(ShadowMatrix));
+
+
+        /*
+        glActiveTexture(GL_TEXTURE2); // Activate texture unit 2
+        glBindTexture(GL_TEXTURE_2D, Fbo->GetShadowMapTexture()); // Load texture into it
+        loc = glGetUniformLocation(programId, "shadowMap");
+        glUniform1i(loc, 2);
+        */
+
+        CHECKERROR;
+        // Draw all objects (This recursively traverses the object hierarchy.)
+        objectRoot->Draw(lightingProgram, Identity);
+
+        Fbo->UnbindTexture(2);
+        //Fbo->UnbindFBO();
+
+        // Turn off the shader
+        lightingProgram->UnuseShader();
+        ////////////////////////////////////////////////////////////////////////////////
+        // End of Lighting pass
+        ////////////////////////////////////////////////////////////////////////////////
+    //}
 
     PreviousTime = glfwGetTime();
-    ////////////////////////////////////////////////////////////////////////////////
-    // End of Lighting pass
-    ////////////////////////////////////////////////////////////////////////////////
 }

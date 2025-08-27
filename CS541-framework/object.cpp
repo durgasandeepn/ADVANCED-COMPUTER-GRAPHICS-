@@ -99,7 +99,10 @@ void Object::Draw(ShaderProgram* program, glm::mat4& objectTr)
         int normalLoc = glGetUniformLocation(program->programId, "normalMap");
         glUniform1i(normalLoc, normalUnit);
     }
+    //
 
+    //
+    //
     glUniform3f(glGetUniformLocation(program->programId, "color1"), 1.0f, 1.0f, 1.0f);  // White
     glUniform3f(glGetUniformLocation(program->programId, "color2"), 0.0f, 0.0f, 0.0f);  // Black
     glUniform1f(glGetUniformLocation(program->programId, "scale"), 10.0f);
@@ -112,17 +115,31 @@ void Object::Draw(ShaderProgram* program, glm::mat4& objectTr)
             shape->DrawVAO();
     CHECKERROR;
 
-        glBindTexture(GL_TEXTURE_2D, 0);
+        //glBindTexture(GL_TEXTURE_2D, 0);
 
     CHECKERROR;
     // Recursively draw each sub-objects, each with its own transformation.
-    if (drawMe)
-        for (int i=0;  i<instances.size();  i++) {
+    if (drawMe) {
+        for (int i = 0; i < instances.size(); i++) {
             CHECKERROR;
-            glm::mat4 itr = objectTr*instances[i].second*animTr;
+            glm::mat4 itr = objectTr * instances[i].second * animTr;
             CHECKERROR;
             instances[i].first->Draw(program, itr);
-            CHECKERROR; }
-    
+            CHECKERROR;
+        }
+    }
     CHECKERROR;
+
+    if (texture != NULL) {
+        texture->UnbindTexture(0);
+    }
+
+    if (normalTexture != NULL) {
+        normalTexture->UnbindTexture(1);
+    }
+
 }
+
+
+
+

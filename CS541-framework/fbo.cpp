@@ -12,6 +12,19 @@ using namespace gl;
 
 #include "fbo.h"
 
+#include "glu.h"
+
+
+#define CHECKERROR {GLenum err = glGetError(); if (err != GL_NO_ERROR) { fprintf(stderr, "OpenGL error (at line Fbo.cpp:%d): %s\n", __LINE__, gluErrorString(err)); exit(-1);} }
+
+
+
+FBO::FBO(const int w, const int h) {
+    width = w;
+    height = h;
+}
+
+
 void FBO::CreateFBO(const int w, const int h)
 {
     width = w;
@@ -51,12 +64,24 @@ void FBO::CreateFBO(const int w, const int h)
     if (status != int(GL_FRAMEBUFFER_COMPLETE_EXT))
         printf("FBO Error: %d\n", status);
 
+    glObjectLabel(GL_FRAMEBUFFER, fboID, -1, "DEBUG FBO SHADOW");
+    glObjectLabel(GL_TEXTURE, textureID, -1, "DEBUG FBO TEXTURE");
+
+    //
     // Unbind the fbo until it's ready to be used
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    CHECKERROR;
 }
 
-void FBO::BindFBO() { glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboID); }
-void FBO::UnbindFBO() { glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); }
+void FBO::BindFBO() { 
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboID); 
+    CHECKERROR;
+}
+
+void FBO::UnbindFBO() { 
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
+    CHECKERROR;
+}
 
 void FBO::BindTexture(const int unit, const int programId, const std::string& name)
 {//
@@ -64,10 +89,23 @@ void FBO::BindTexture(const int unit, const int programId, const std::string& na
     glBindTexture(GL_TEXTURE_2D, textureID);
     int loc = glGetUniformLocation(programId, name.c_str());
     glUniform1i(loc, unit);
+    CHECKERROR;
 }
 
 void FBO::UnbindTexture(const int unit)
 {  
     glActiveTexture((gl::GLenum)((int)GL_TEXTURE0 + unit));
     glBindTexture(GL_TEXTURE_2D, 0);
+    CHECKERROR;
+
 }
+
+
+
+
+
+
+
+
+
+

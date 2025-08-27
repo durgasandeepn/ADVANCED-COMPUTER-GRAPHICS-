@@ -50,6 +50,7 @@ public:
     float ry;
     float front;
     float back;
+    float Rx, Ry;
 
     glm::vec3 eye = glm::vec3(0, -20, 0);
     float Speed;
@@ -63,14 +64,36 @@ public:
     double CurrentTime;
     double PreviousTime;
 
+    int ShadowMap_Width, ShadowMap_Height;
+
+    //
+    bool DepthFlag = false;
+    /*
+    enum ShadowTest { DepthTestTest, ShadowIndexTest, PixelDepthTest, LightDepthTest};
+    ShadowTest ShadowTesting = DepthTestTest;
+    */
+    //
+    
+    // 
     // Light parameters
     float lightSpin, lightTilt, lightDist;
     glm::vec3 lightPos;
-    // @@ Perhaps declare additional scene lighting values here. (lightVal, lightAmb)
+    glm::vec3 lightDir;
+    //
+    // World up direction (standard "up" is positive Y-axis)
+    glm::vec3 worldUp;  // World "up" direction (Y-axis)
+    // Compute the right direction (perpendicular to both lightDir and worldUp)
+    glm::vec3 rightDir;  // Right direction
+    // Compute the up direction (perpendicular to both lightDir and rightDir)
+    glm::vec3 upDir;  // Up direction
+    //
 
+
+    // @@ Perhaps declare additional scene lighting values here. (lightVal, lightAmb)
     glm::vec3 lightVal;// Brightness for micro-facet BRDF
     glm::vec3 lightAmb;//ambient light
     glm::vec3 lowSpecular;
+    
     float RoughSurface;//ground
     float PolishedSurface;//teapot
     float ModerateSmoothSurface;//podium
@@ -101,7 +124,8 @@ public:
     int width, height;
 
     // Transformations
-    glm::mat4 WorldProj, WorldView, WorldInverse;
+    glm::mat4 WorldProj, WorldView, WorldInverse, L_ModelMatrix, L_ViewMatrix, L_ProjectionMatrix, ShadowMatrix, B;
+
 
     // All objects in the scene are children of this single root object.
     Object* objectRoot;
@@ -114,6 +138,8 @@ public:
     // Shader programs
     ShaderProgram* lightingProgram;
     // @@ Declare additional shaders if necessary
+    ShaderProgram* ShadowProgram;
+    FBO* Fbo;
 
 
     // Options menu stuff

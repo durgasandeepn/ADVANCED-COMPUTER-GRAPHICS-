@@ -8,10 +8,12 @@
 
 class FBO {
 public:
+
     unsigned int fboID;
     unsigned int textureID;
     int width, height;  // Size of the texture.
 
+    FBO(const int w, const int h);
     void CreateFBO(const int w, const int h);
     
     // Bind this FBO to receive the output of the graphics pipeline.
@@ -25,4 +27,5 @@ public:
 
     // Unbind this FBO's texture from a texture unit.
     void UnbindTexture(const int unit);
+
 };
