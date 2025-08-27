@@ -4,7 +4,7 @@
 #version 330
 
 out vec4 FragColor;
-//
+
 // These definitions agree with the ObjectIds enum in scene.h
 const int     nullId	= 0;
 const int     skyId	= 1;
@@ -33,9 +33,6 @@ float lightDepth;
 float pixelDepth;
 bool inShadow;
 //
-//Reflection
-uniform sampler2D UpMap,LowerMap;
-//
 uniform int objectId;
 uniform vec3 diffuse;
 
@@ -63,18 +60,9 @@ uniform vec3 color2; // Color of the second checker
 uniform float scale;  // Scale of the checkerboard
 vec3 delta;
 
-//
-//Reflection
 
 void main()
 {
-	/*
-	vec2 uv = gl_FragCoord.xy/vec2(1024,1024); // (or whatever screen size)
-	FragColor.xyz = vec3(texture(LowerMap, uv)); // or similar
-	//FragColor.xyz = vec3(texture(UpMap, uv)); // or similar
-	return; // which disables all further code in the shader.
-	*/
-
 	vec3 N = normalize(normalVec);
     vec3 L = normalize(lightVec);
 	vec3 V = normalize(eyeVec);
@@ -112,10 +100,8 @@ void main()
         inShadow = false;  // Default to being in shadow if out of bounds
     }
 
-
-	
 	if(objectId == teapotId){//ok
-		//texture
+				//texture
 		//uv = fract(texCoord * 4);
 		TexturePresent = false;
 		NormalMapPresent = false;
@@ -201,13 +187,14 @@ void main()
 		TexturePresent = false;
 		NormalMapPresent = false;
 	}
-
+	
 
 	if(TexturePresent == true && objectId != rPicId){
 
 		color = texture(tex, uv);
 		Kd = color.xyz;
 	}
+
 
 	if(NormalMapPresent == true){
 		//NormalMap
@@ -221,51 +208,14 @@ void main()
 	HN = max(dot(H,N),0.0);
 
 	//
-	//Normal Calculations are to be  done above
-	//
-	//Reflections are to be done here 
-	//Reflection
-	if(objectId == teapotId)
-	{
-		vec3 r;
-		float c;
-	
-		//Reflection
-		r = 2 * (dot(V,N)) * N - V;
-		r = normalize(r);
-		c = r.z;
-
-		if(c > 0){
-			
-			uv = vec2( r.x/( 1 + c), r.y/( 1 + c) ) * 0.5 + vec2(0.5,0.5);
-			color =  texture(UpMap, uv);
-			Kd = color.xyz;
-			
-			//FragColor.xyz = Kd;
-			//FragColor.w = 1.0;
-			//return;
-
-		}else {
-			
-			uv = vec2( r.x/( 1 - c), r.y/( 1 - c) ) * 0.5 + vec2(0.5,0.5);
-			color =  texture(LowerMap, uv);
-			Kd = color.xyz;
-			
-			//FragColor.xyz = Kd;
-			//FragColor.w = 1.0;
-			//return;
-		}
-		
-	}
-
-
+	//Normal Calculations are done above 
+	//reflections are to be done here 
 	if(objectId == seaId){
 
 	 	vec3 R = -1.0 * (2.0 * dot(N , V) * (N - V));
 		uv[0] = -atan(R.y, R.x) / (2.0 * Pi);
 		uv[1] = acos(R.z) / Pi;
 		color = texture(tex,uv);
-
 	}
 
 	//
@@ -275,8 +225,7 @@ void main()
 	//FragColor.xyz = vec3(0.5,0.5,0.5)*Kd + Kd*max(dot(L,N),0.0);
 	//
 	if(objectId != skyId && objectId != seaId){
-	
-	
+		
 
 			D =	((Alpha + 2.0)/(2.0*Pi)) * pow((HN),Alpha);
 			F = Ks + ((1,1,1) - Ks) * pow((1 - max(dot(H,L),0.0)),5);
@@ -284,7 +233,7 @@ void main()
 	
 			BRDF = (Kd/Pi) + (F * G * D) / 4.0;
 			//FragColor.xyz = (Ia * Kd) + Ii*(LN)	*(BRDF * color.xyz);
-			
+		
 			//
 			// If in shadow, only apply ambient lighting
 			if (inShadow == true) 
@@ -292,7 +241,7 @@ void main()
 				//In Shadow
 				FragColor.xyz = (Ia * Kd);  // Ambient lighting only
 
-			} else
+			} else if (inShadow == false) 
 			{
 				//In lighting
 				FragColor.xyz = (Ia * Kd) + Ii*(LN)	* (BRDF);
@@ -300,7 +249,8 @@ void main()
 
 		
 			FragColor.w = 1.0;
-			
+
+
 	}else if(objectId == skyId || objectId == seaId) {
 		//
 		//Only For Sky and sea Texture

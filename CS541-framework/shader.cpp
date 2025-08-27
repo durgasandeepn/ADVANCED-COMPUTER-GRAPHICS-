@@ -44,6 +44,7 @@ ShaderProgram::ShaderProgram()
 void ShaderProgram::UseShader()
 {
     glUseProgram(programId);
+    
 }
 
 // Done using a shader program

@@ -14,9 +14,7 @@ using namespace gl;
 
 #include "glu.h"
 
-
 #define CHECKERROR {GLenum err = glGetError(); if (err != GL_NO_ERROR) { fprintf(stderr, "OpenGL error (at line Fbo.cpp:%d): %s\n", __LINE__, gluErrorString(err)); exit(-1);} }
-
 
 
 FBO::FBO(const int w, const int h) {

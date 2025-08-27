@@ -32,9 +32,10 @@ void main()
     
     vec3 worldPos = (ModelTr*vertex).xyz;
 
-    normalVec = vertexNormal*mat3(NormalTr); 
-    lightVec = lightPos - worldPos;
-	
+    normalVec = vertexNormal * mat3(NormalTr); 
+
+    //lightVec = lightPos - worldPos; 
+
 	vec3 eyePos =(WorldInverse*vec4(0,0,0,1)).xyz;
 	lightVec=lightPos-worldPos;
 	eyeVec =eyePos-worldPos;

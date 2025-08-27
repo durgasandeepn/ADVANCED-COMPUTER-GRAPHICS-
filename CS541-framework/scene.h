@@ -65,6 +65,7 @@ public:
     double PreviousTime;
 
     int ShadowMap_Width, ShadowMap_Height;
+    int ReflectionMap_Width, ReflectionMap_Height;
 
     //
     bool DepthFlag = false;
@@ -139,7 +140,16 @@ public:
     ShaderProgram* lightingProgram;
     // @@ Declare additional shaders if necessary
     ShaderProgram* ShadowProgram;
-    FBO* Fbo;
+    FBO* Shadow_Fbo;
+    //
+    //Reflection Fbos and Prg;
+    ShaderProgram* ReflectionProgram;
+    FBO* Up_Fbo;
+    FBO* Lower_Fbo;
+    //
+    //Upper reflection map
+    //Lower reflection map
+    glm::vec3 EYE = glm::vec3(0.0, 0.0, 1.5);
 
 
     // Options menu stuff
